@@ -1,4 +1,4 @@
-"""Build a presentation-style report page and matching speaker script."""
+﻿"""Build a presentation-style report page and matching speaker script."""
 
 from __future__ import annotations
 
@@ -187,10 +187,10 @@ def build_sections(summary: dict, opt: dict, visual: dict) -> list[dict]:
             "title": "从竞赛复现到可解释的零售预测项目",
             "visual": "hero",
             "bullets": [
-                "[COMPUTED, HIGH] 本项目把 M5 Accuracy 的 notebook 和模型产物整理成可复现脚本、可评分流程和成果网页。",
-                "[COMPUTED, HIGH] 当前本地验证窗口为 d_1914..d_1941，优化后 Avg WRMSSE 为 "
+                "本项目把 M5 Accuracy 的 notebook 和模型产物整理成可复现脚本、可评分流程和成果网页。",
+                "当前本地验证窗口为 d_1914..d_1941，优化后 Avg WRMSSE 为 "
                 + num(summary["optimized_avg_wrmsse"]) + "。",
-                "[INFERRED, HIGH] 汇报重点不是单个模型炫技，而是数据工程、层级评估、误差诊断和优化选择的完整闭环。",
+                "汇报重点不是单个模型炫技，而是数据工程、层级评估、误差诊断和优化选择的完整闭环。",
             ],
             "speech": [
                 "各位好，我今天汇报的是 M5 Forecasting Accuracy 项目。这个项目的目标，是把一个竞赛型销售预测任务，整理成一个可以复现、可以解释、也可以展示的完整数据分析作品。",
@@ -204,9 +204,9 @@ def build_sections(summary: dict, opt: dict, visual: dict) -> list[dict]:
             "title": "我参考了哪些方案，以及各自给我的启发",
             "visual": "references",
             "bullets": [
-                "[KNOWN, HIGH] 参考了 M5 官方数据结构、Heads or Tails 的交互式 EDA、Ryan Holbrook 的多步预测练习。",
-                "[KNOWN, HIGH] 参考了 Matthias Anderer、btrotta、devmofl 三类高质量 M5 方案。",
-                "[INFERRED, HIGH] 我最终选择先强化 LightGBM 复现、WRMSSE 评估、趋势校准和可视化表达，而不是直接迁移 GPU 成本更高的深度模型。",
+                "参考了 M5 官方数据结构、Heads or Tails 的交互式 EDA、Ryan Holbrook 的多步预测练习。",
+                "参考了 Matthias Anderer、btrotta、devmofl 三类高质量 M5 方案。",
+                "我最终选择先强化 LightGBM 复现、WRMSSE 评估、趋势校准和可视化表达，而不是直接迁移 GPU 成本更高的深度模型。",
             ],
             "speech": [
                 "我的参考可以分成四类。第一类是 M5 赛题本身，包括 sales、calendar、sell prices 三张核心表和 12 层层级评价。",
@@ -221,9 +221,9 @@ def build_sections(summary: dict, opt: dict, visual: dict) -> list[dict]:
             "title": "我要解决的问题：30,490 条底层序列的 28 天销售预测",
             "visual": "dataset",
             "bullets": [
-                f"[COMPUTED, HIGH] 数据包含 {int_num(visual['bottom_series'])} 条商品-门店底层序列、{visual['stores']} 个门店、{visual['items']} 个商品。",
-                "[KNOWN, HIGH] M5 的难点在于不仅预测底层 SKU，还要在总量、州、门店、品类、部门等 12 个层级上表现稳定。",
-                "[INFERRED, HIGH] 因此项目必须同时解决时间序列特征、价格/事件协变量、层级聚合评价和结果解释。",
+                f"数据包含 {int_num(visual['bottom_series'])} 条商品-门店底层序列、{visual['stores']} 个门店、{visual['items']} 个商品。",
+                "M5 的难点在于不仅预测底层 SKU，还要在总量、州、门店、品类、部门等 12 个层级上表现稳定。",
+                "因此项目必须同时解决时间序列特征、价格/事件协变量、层级聚合评价和结果解释。",
             ],
             "speech": [
                 "M5 的业务问题很直观：给定历史销量、日历和价格，预测未来 28 天的销售。",
@@ -237,9 +237,9 @@ def build_sections(summary: dict, opt: dict, visual: dict) -> list[dict]:
             "title": "从三张原始表到可训练样本",
             "visual": "dataflow",
             "bullets": [
-                "[KNOWN, HIGH] `sales_train_evaluation.csv` 提供商品-门店-日期销量宽表。",
-                "[KNOWN, HIGH] `calendar.csv` 提供日期、节日、SNAP 等时间上下文。",
-                "[KNOWN, HIGH] `sell_prices.csv` 提供门店-商品-周粒度价格。",
+                "`sales_train_evaluation.csv` 提供商品-门店-日期销量宽表。",
+                "`calendar.csv` 提供日期、节日、SNAP 等时间上下文。",
+                "`sell_prices.csv` 提供门店-商品-周粒度价格。",
             ],
             "speech": [
                 "数据处理的第一步，是把 sales 宽表整理成以 id 和 day 为单位的长表样本。",
@@ -254,9 +254,9 @@ def build_sections(summary: dict, opt: dict, visual: dict) -> list[dict]:
             "title": "核心特征：lag、rolling、价格、日历和类别编码",
             "visual": "feature",
             "bullets": [
-                "[COMPUTED, HIGH] 本地模型产物使用了 lag/rolling、价格、日历、事件/SNAP 和类别 ID 等特征。",
-                "[INFERRED, HIGH] feature importance 图显示 lag 和 rolling 类特征是模型解释中的核心信号。",
-                "[INFERRED, HIGH] 后续最值得补的是 item、dept-store 等聚合粒度 lag/rolling。",
+                "本地模型产物使用了 lag/rolling、价格、日历、事件/SNAP 和类别 ID 等特征。",
+                "feature importance 图显示 lag 和 rolling 类特征是模型解释中的核心信号。",
+                "后续最值得补的是 item、dept-store 等聚合粒度 lag/rolling。",
             ],
             "speech": [
                 "这个项目的核心不是把时间序列直接丢给模型，而是先把历史行为转化为特征。",
@@ -272,9 +272,9 @@ def build_sections(summary: dict, opt: dict, visual: dict) -> list[dict]:
             "visual": "pipeline",
             "code": "pipeline",
             "bullets": [
-                "[COMPUTED, HIGH] 当前复现使用 archived LightGBM 模型和测试特征，生成 28 天验证预测。",
-                "[COMPUTED, HIGH] 原始 LightGBM 版本 Avg WRMSSE 为 " + num(summary["model_avg_wrmsse"]) + "。",
-                "[INFERRED, HIGH] 递归预测工程成本低、复现稳定，但可能存在 horizon 误差传播。",
+                "当前复现使用 archived LightGBM 模型和测试特征，生成 28 天验证预测。",
+                "原始 LightGBM 版本 Avg WRMSSE 为 " + num(summary["model_avg_wrmsse"]) + "。",
+                "递归预测工程成本低、复现稳定，但可能存在 horizon 误差传播。",
             ],
             "speech": [
                 "模型部分我复现的是按门店训练的 LightGBM 体系。简单说，就是每个门店有一个对应模型，合计 10 个门店模型。",
@@ -289,9 +289,9 @@ def build_sections(summary: dict, opt: dict, visual: dict) -> list[dict]:
             "visual": "wrmsse",
             "code": "wrmsse",
             "bullets": [
-                "[KNOWN, HIGH] WRMSSE 会按历史销量变化尺度标准化误差，并按最近销售额赋权。",
-                "[COMPUTED, HIGH] 本项目在 12 个层级上分别评分，再取平均作为本地对比指标。",
-                "[INFERRED, HIGH] 这个指标能同时约束底层 SKU 和高层业务总量。",
+                "WRMSSE 会按历史销量变化尺度标准化误差，并按最近销售额赋权。",
+                "本项目在 12 个层级上分别评分，再取平均作为本地对比指标。",
+                "这个指标能同时约束底层 SKU 和高层业务总量。",
             ],
             "speech": [
                 "如果只用 RMSE，销量大的商品和销量小的商品会混在一起，不同层级也很难公平比较。",
@@ -306,9 +306,9 @@ def build_sections(summary: dict, opt: dict, visual: dict) -> list[dict]:
             "visual": "candidates",
             "code": "candidate",
             "bullets": [
-                f"[COMPUTED, HIGH] 一共评估了 {visual['optimization_candidates']} 个优化候选。",
-                "[COMPUTED, HIGH] 最佳候选为 `" + opt["best_candidate"] + "`，相对原始 LightGBM 提升 " + pct(opt["improvement_pct"]) + "。",
-                "[COMPUTED, HIGH] 分组趋势和 horizon 趋势候选在单窗口验证中没有超过全局趋势校准。",
+                f"一共评估了 {visual['optimization_candidates']} 个优化候选。",
+                "最佳候选为 `" + opt["best_candidate"] + "`，相对原始 LightGBM 提升 " + pct(opt["improvement_pct"]) + "。",
+                "分组趋势和 horizon 趋势候选在单窗口验证中没有超过全局趋势校准。",
             ],
             "speech": [
                 "优化阶段我做了一个比较克制的选择：不重新训练大模型，而是先对已经复现出的预测做可解释的后处理扫描。",
@@ -323,9 +323,9 @@ def build_sections(summary: dict, opt: dict, visual: dict) -> list[dict]:
             "visual": "trend",
             "code": "trend",
             "bullets": [
-                "[COMPUTED, HIGH] multiplier 使用 `d_1886..d_1913` 与 `d_1858..d_1885` 的总销量比值。",
-                "[COMPUTED, HIGH] 原始 28 天总销量偏差为 " + pct(summary["model_total_bias_pct"]) + "，优化后为 " + pct(summary["optimized_total_bias_pct"]) + "。",
-                "[INFERRED, HIGH] 这个优化主要修正高层总量低估，对 L12 底层几乎没有改善。",
+                "multiplier 使用 `d_1886..d_1913` 与 `d_1858..d_1885` 的总销量比值。",
+                "原始 28 天总销量偏差为 " + pct(summary["model_total_bias_pct"]) + "，优化后为 " + pct(summary["optimized_total_bias_pct"]) + "。",
+                "这个优化主要修正高层总量低估，对 L12 底层几乎没有改善。",
             ],
             "speech": [
                 "这个 multiplier 的设计原则是不能泄漏未来信息。它只看预测日前已经知道的历史窗口。",
@@ -340,9 +340,9 @@ def build_sections(summary: dict, opt: dict, visual: dict) -> list[dict]:
             "visual": "visual",
             "code": "visual",
             "bullets": [
-                "[COMPUTED, HIGH] 生成了 EDA 日销量、州-品类销售热力、候选优化排名、12 层 WRMSSE、示例序列和门店偏差数据。",
-                "[INFERRED, HIGH] 汇报网页按“先理解数据，再理解模型，再解释结果”的顺序组织。",
-                "[INFERRED, HIGH] 这种结构比只展示最终分数更容易体现项目逻辑和边际贡献。",
+                "生成了 EDA 日销量、州-品类销售热力、候选优化排名、12 层 WRMSSE、示例序列和门店偏差数据。",
+                "汇报网页按“先理解数据，再理解模型，再解释结果”的顺序组织。",
+                "这种结构比只展示最终分数更容易体现项目逻辑和边际贡献。",
             ],
             "speech": [
                 "为了让汇报更清楚，我没有只做一个分数表，而是把可视化拆成五类。",
@@ -356,10 +356,10 @@ def build_sections(summary: dict, opt: dict, visual: dict) -> list[dict]:
             "title": "结果不是“分数变好”这么简单：高层改善明显，底层仍是难点",
             "visual": "results",
             "bullets": [
-                "[COMPUTED, HIGH] sNaive Avg WRMSSE: " + num(summary["snaive_avg_wrmsse"]) + "。",
-                "[COMPUTED, HIGH] LightGBM Avg WRMSSE: " + num(summary["model_avg_wrmsse"]) + "。",
-                "[COMPUTED, HIGH] Optimized Avg WRMSSE: " + num(summary["optimized_avg_wrmsse"]) + "。",
-                "[COMPUTED, HIGH] L1_Total 从 " + num(0.6288945410210011) + " 降到 " + num(0.199010472456473) + "；L12_Item_Store 优化后为 " + num(0.8165459640822168) + "。",
+                "sNaive Avg WRMSSE: " + num(summary["snaive_avg_wrmsse"]) + "。",
+                "LightGBM Avg WRMSSE: " + num(summary["model_avg_wrmsse"]) + "。",
+                "Optimized Avg WRMSSE: " + num(summary["optimized_avg_wrmsse"]) + "。",
+                "L1_Total 从 " + num(0.6288945410210011) + " 降到 " + num(0.199010472456473) + "；L12_Item_Store 优化后为 " + num(0.8165459640822168) + "。",
             ],
             "speech": [
                 "从最终结果看，机器学习模型相比 sNaive 有明显提升，Avg WRMSSE 从 0.837726 降到 0.475241。",
@@ -373,9 +373,9 @@ def build_sections(summary: dict, opt: dict, visual: dict) -> list[dict]:
             "title": "我的边际贡献：把竞赛方案整理成可复现、可解释、可展示的项目",
             "visual": "contribution",
             "bullets": [
-                "[COMPUTED, HIGH] 完成复现脚本、评分脚本、优化扫描脚本、可视化资产脚本和汇报网页。",
-                "[COMPUTED, HIGH] 建立了 sNaive、LightGBM、Optimized 三层对比结果。",
-                "[INFERRED, HIGH] 项目的价值在于把模型结果变成可审计的业务分析链路。",
+                "完成复现脚本、评分脚本、优化扫描脚本、可视化资产脚本和汇报网页。",
+                "建立了 sNaive、LightGBM、Optimized 三层对比结果。",
+                "项目的价值在于把模型结果变成可审计的业务分析链路。",
             ],
             "speech": [
                 "我总结自己的边际贡献有三点。",
@@ -390,10 +390,10 @@ def build_sections(summary: dict, opt: dict, visual: dict) -> list[dict]:
             "title": "下一轮优化：先建 rolling CV，再做 direct 和聚合 lag",
             "visual": "next",
             "bullets": [
-                "[INFERRED, HIGH] P0: 建立 rolling CV，避免单窗口过拟合。",
-                "[INFERRED, HIGH] P1: 增加 item、item-store、dept-store 聚合 lag/rolling 特征。",
-                "[INFERRED, HIGH] P2: 增加 4 段 direct horizon LightGBM，与 recursive 输出做 ensemble。",
-                "[INFERRED, MED] P3: 再评估层级 reconciliation 和 foundation model 抽样实验。",
+                "P0: 建立 rolling CV，避免单窗口过拟合。",
+                "P1: 增加 item、item-store、dept-store 聚合 lag/rolling 特征。",
+                "P2: 增加 4 段 direct horizon LightGBM，与 recursive 输出做 ensemble。",
+                "P3: 再评估层级 reconciliation 和 foundation model 抽样实验。",
             ],
             "speech": [
                 "最后讲下一步。我不会建议马上换一个最新大模型，因为当前证据显示，最缺的是稳定实验体系和多粒度特征。",
@@ -534,7 +534,6 @@ def build_markdown(sections: list[dict]) -> str:
             lines.append("")
             lines.append(para)
         lines.append("")
-    lines.append("[RULES I BROKE]: none")
     return "\n".join(lines)
 
 
@@ -598,8 +597,7 @@ pre{margin:16px 0 0;background:#0f172a;color:#e2e8f0;border-radius:8px;padding:1
     <main class="main">
       {"".join(body_sections)}
       <div class="footer">
-        [COMPUTED, HIGH] 页面由本地脚本生成，核心指标来自 output/project_summary.json、output/level_contribution.csv 和 output/optimization_candidates.csv。<br>
-        [RULES I BROKE]: none
+        页面由本地脚本生成，核心指标来自 output/project_summary.json、output/level_contribution.csv 和 output/optimization_candidates.csv。<br>
       </div>
     </main>
   </div>

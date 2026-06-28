@@ -1,4 +1,4 @@
-"""Build an interactive HTML dashboard for the M5 project."""
+﻿"""Build an interactive HTML dashboard for the M5 project."""
 
 from __future__ import annotations
 
@@ -218,16 +218,6 @@ main { padding: 24px 0 44px; }
 .panel h3 { font-size: 16px; }
 .kpi-box strong { display: block; font-size: 30px; line-height: 1; margin-bottom: 7px; }
 .kpi-box span { color: var(--muted); font-size: 13px; }
-.claim {
-  display: inline-block;
-  font-size: 11px;
-  font-weight: 800;
-  color: #0f4f4d;
-  background: #d9f0ec;
-  padding: 3px 6px;
-  border-radius: 4px;
-  margin-right: 6px;
-}
 p { line-height: 1.62; color: #344054; margin: 0 0 12px; }
 .chart { min-height: 280px; }
 svg { width: 100%; height: auto; display: block; }
@@ -518,12 +508,12 @@ if (document.readyState === "loading") {
           <h2>验证窗口总销量：实际 vs 预测</h2>
           <div class="legend" id="forecast-legend"></div>
           <div class="chart" id="forecast-chart">{forecast_svg}</div>
-          <p><span class="claim">[COMPUTED, HIGH]</span>最佳候选为 <strong id="best-candidate">{best_candidate}</strong>，相对原始 LightGBM 的本地验证提升为 <strong id="best-improvement">{best_improvement}</strong>。</p>
+          <p>最佳候选为 <strong id="best-candidate">{best_candidate}</strong>，相对原始 LightGBM 的本地验证提升为 <strong id="best-improvement">{best_improvement}</strong>。</p>
         </div>
         <div class="panel">
           <h2>项目判断</h2>
-          <p><span class="claim">[INFERRED, HIGH]</span>当前最稳的优化不是继续细分 multiplier，而是把训练体系升级到 rolling CV、direct horizon 和聚合 lag 特征。</p>
-          <p><span class="claim">[COMPUTED, HIGH]</span>本地候选扫描显示，分组趋势与 horizon 趋势校准没有超过全局趋势版本。</p>
+          <p>当前最稳的优化不是继续细分 multiplier，而是把训练体系升级到 rolling CV、direct horizon 和聚合 lag 特征。</p>
+          <p>本地候选扫描显示，分组趋势与 horizon 趋势校准没有超过全局趋势版本。</p>
           <p class="note">本页参考 Kaggle Heads or Tails 的交互式 M5 EDA 组织方式：先让数据结构可见，再解释模型、误差和优化路径。</p>
         </div>
       </div>
@@ -593,12 +583,12 @@ if (document.readyState === "loading") {
 
     <section id="roadmap" class="view">
       <div class="grid three">
-        <div class="panel"><h2>短期 P0</h2><p><span class="claim">[INFERRED, HIGH]</span>建立 4 折 rolling CV，把所有 multiplier、blend 和模型选择放到同一验证框架里。</p></div>
-        <div class="panel"><h2>中期 P1</h2><p><span class="claim">[INFERRED, HIGH]</span>补充 item-store、item、dept-store 聚合 lag/rolling 特征，降低底层噪声。</p></div>
-        <div class="panel"><h2>中期 P2</h2><p><span class="claim">[INFERRED, HIGH]</span>增加 4 段 direct horizon LightGBM，与当前 recursive 输出做 CV ensemble。</p></div>
-        <div class="panel"><h2>长期 P3</h2><p><span class="claim">[INFERRED, MED]</span>尝试层级 reconciliation，让 L1-L12 的预测更一致。</p></div>
-        <div class="panel"><h2>长期 P4</h2><p><span class="claim">[INFERRED, MED]</span>抽样评估 Chronos、TimesFM、Moirai 等 foundation model，稳定增益后再入 ensemble。</p></div>
-        <div class="panel"><h2>发布形态</h2><p><span class="claim">[COMPUTED, HIGH]</span>当前产物已整理为脚本、输出数据、报告文档和 GitHub Pages 入口。</p></div>
+        <div class="panel"><h2>短期 P0</h2><p>建立 4 折 rolling CV，把所有 multiplier、blend 和模型选择放到同一验证框架里。</p></div>
+        <div class="panel"><h2>中期 P1</h2><p>补充 item-store、item、dept-store 聚合 lag/rolling 特征，降低底层噪声。</p></div>
+        <div class="panel"><h2>中期 P2</h2><p>增加 4 段 direct horizon LightGBM，与当前 recursive 输出做 CV ensemble。</p></div>
+        <div class="panel"><h2>长期 P3</h2><p>尝试层级 reconciliation，让 L1-L12 的预测更一致。</p></div>
+        <div class="panel"><h2>长期 P4</h2><p>抽样评估 Chronos、TimesFM、Moirai 等 foundation model，稳定增益后再入 ensemble。</p></div>
+        <div class="panel"><h2>发布形态</h2><p>当前产物已整理为脚本、输出数据、报告文档和 GitHub Pages 入口。</p></div>
       </div>
     </section>
   </main>

@@ -151,6 +151,35 @@
       "problemMatcher": []
     },
     {
+      "label": "M5: sanitize artifacts",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "scripts/sanitize_artifacts.py"
+      ],
+      "options": {
+        "env": {
+          "PYTHONIOENCODING": "utf-8"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "M5: check artifact hygiene",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "scripts/sanitize_artifacts.py",
+        "--check"
+      ],
+      "options": {
+        "env": {
+          "PYTHONIOENCODING": "utf-8"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "M5: run full optimized pipeline",
       "type": "shell",
       "command": "python",

@@ -67,16 +67,6 @@ main { padding: 24px 0 44px; }
 .panel h3 { font-size: 16px; }
 .kpi-box strong { display: block; font-size: 30px; line-height: 1; margin-bottom: 7px; }
 .kpi-box span { color: var(--muted); font-size: 13px; }
-.claim {
-  display: inline-block;
-  font-size: 11px;
-  font-weight: 800;
-  color: #0f4f4d;
-  background: #d9f0ec;
-  padding: 3px 6px;
-  border-radius: 4px;
-  margin-right: 6px;
-}
 p { line-height: 1.62; color: #344054; margin: 0 0 12px; }
 .chart { min-height: 280px; }
 svg { width: 100%; height: auto; display: block; }
@@ -161,12 +151,12 @@ footer { border-top: 1px solid var(--line); padding: 22px 0; color: var(--muted)
           <h2>验证窗口总销量：实际 vs 预测</h2>
           <div class="legend" id="forecast-legend"></div>
           <div class="chart" id="forecast-chart"><svg viewBox="0 0 900 300" role="img" aria-label="static line chart"><line x1="58" y1="18.0" x2="882" y2="18.0" class="grid-line"/><text x="8" y="22.0" class="axis">61,450</text><line x1="58" y1="79.0" x2="882" y2="79.0" class="grid-line"/><text x="8" y="83.0" class="axis">54,316</text><line x1="58" y1="140.0" x2="882" y2="140.0" class="grid-line"/><text x="8" y="144.0" class="axis">47,183</text><line x1="58" y1="201.0" x2="882" y2="201.0" class="grid-line"/><text x="8" y="205.0" class="axis">40,050</text><line x1="58" y1="262.0" x2="882" y2="262.0" class="grid-line"/><text x="8" y="266.0" class="axis">32,916</text><polyline points="58.0,211.7 88.5,240.0 119.0,248.9 149.6,246.5 180.1,176.7 210.6,112.2 241.1,90.0 271.6,174.2 302.1,164.5 332.7,204.8 363.2,194.9 393.7,168.9 424.2,79.7 454.7,153.5 485.3,146.7 515.8,206.7 546.3,182.2 576.8,197.1 607.3,166.6 637.9,79.1 668.4,31.1 698.9,181.2 729.4,211.9 759.9,226.3 790.4,227.4 821.0,179.6 851.5,102.9 882.0,78.8" class="line" stroke="#1f2937"/><polyline points="58.0,224.3 88.5,241.8 119.0,246.5 149.6,241.6 180.1,187.0 210.6,108.4 241.1,87.0 271.6,167.2 302.1,164.4 332.7,211.5 363.2,194.7 393.7,151.1 424.2,83.5 454.7,147.9 485.3,160.5 515.8,206.8 546.3,198.5 576.8,193.7 607.3,168.2 637.9,85.1 668.4,65.3 698.9,186.3 729.4,219.6 759.9,226.5 790.4,227.9 821.0,186.6 851.5,110.5 882.0,103.8" class="line" stroke="#2563eb"/><polyline points="58.0,222.2 88.5,239.9 119.0,244.6 149.6,239.7 180.1,184.7 210.6,105.6 241.1,84.1 271.6,164.7 302.1,162.0 332.7,209.4 363.2,192.4 393.7,148.6 424.2,80.5 454.7,145.4 485.3,158.1 515.8,204.6 546.3,196.3 576.8,191.5 607.3,165.8 637.9,82.2 668.4,62.3 698.9,184.0 729.4,217.5 759.9,224.5 790.4,225.9 821.0,184.3 851.5,107.7 882.0,100.9" class="line" stroke="#2f855a"/><text x="42.0" y="288" class="axis">1</text><text x="469.3" y="288" class="axis">15</text><text x="866.0" y="288" class="axis">28</text></svg></div>
-          <p><span class="claim">[COMPUTED, HIGH]</span>最佳候选为 <strong id="best-candidate">trend_global</strong>，相对原始 LightGBM 的本地验证提升为 <strong id="best-improvement">0.81%</strong>。</p>
+          <p>最佳候选为 <strong id="best-candidate">trend_global</strong>，相对原始 LightGBM 的本地验证提升为 <strong id="best-improvement">0.81%</strong>。</p>
         </div>
         <div class="panel">
           <h2>项目判断</h2>
-          <p><span class="claim">[INFERRED, HIGH]</span>当前最稳的优化不是继续细分 multiplier，而是把训练体系升级到 rolling CV、direct horizon 和聚合 lag 特征。</p>
-          <p><span class="claim">[COMPUTED, HIGH]</span>本地候选扫描显示，分组趋势与 horizon 趋势校准没有超过全局趋势版本。</p>
+          <p>当前最稳的优化不是继续细分 multiplier，而是把训练体系升级到 rolling CV、direct horizon 和聚合 lag 特征。</p>
+          <p>本地候选扫描显示，分组趋势与 horizon 趋势校准没有超过全局趋势版本。</p>
           <p class="note">本页参考 Kaggle Heads or Tails 的交互式 M5 EDA 组织方式：先让数据结构可见，再解释模型、误差和优化路径。</p>
         </div>
       </div>
@@ -236,12 +226,12 @@ footer { border-top: 1px solid var(--line); padding: 22px 0; color: var(--muted)
 
     <section id="roadmap" class="view">
       <div class="grid three">
-        <div class="panel"><h2>短期 P0</h2><p><span class="claim">[INFERRED, HIGH]</span>建立 4 折 rolling CV，把所有 multiplier、blend 和模型选择放到同一验证框架里。</p></div>
-        <div class="panel"><h2>中期 P1</h2><p><span class="claim">[INFERRED, HIGH]</span>补充 item-store、item、dept-store 聚合 lag/rolling 特征，降低底层噪声。</p></div>
-        <div class="panel"><h2>中期 P2</h2><p><span class="claim">[INFERRED, HIGH]</span>增加 4 段 direct horizon LightGBM，与当前 recursive 输出做 CV ensemble。</p></div>
-        <div class="panel"><h2>长期 P3</h2><p><span class="claim">[INFERRED, MED]</span>尝试层级 reconciliation，让 L1-L12 的预测更一致。</p></div>
-        <div class="panel"><h2>长期 P4</h2><p><span class="claim">[INFERRED, MED]</span>抽样评估 Chronos、TimesFM、Moirai 等 foundation model，稳定增益后再入 ensemble。</p></div>
-        <div class="panel"><h2>发布形态</h2><p><span class="claim">[COMPUTED, HIGH]</span>当前产物已整理为脚本、输出数据、报告文档和 GitHub Pages 入口。</p></div>
+        <div class="panel"><h2>短期 P0</h2><p>建立 4 折 rolling CV，把所有 multiplier、blend 和模型选择放到同一验证框架里。</p></div>
+        <div class="panel"><h2>中期 P1</h2><p>补充 item-store、item、dept-store 聚合 lag/rolling 特征，降低底层噪声。</p></div>
+        <div class="panel"><h2>中期 P2</h2><p>增加 4 段 direct horizon LightGBM，与当前 recursive 输出做 CV ensemble。</p></div>
+        <div class="panel"><h2>长期 P3</h2><p>尝试层级 reconciliation，让 L1-L12 的预测更一致。</p></div>
+        <div class="panel"><h2>长期 P4</h2><p>抽样评估 Chronos、TimesFM、Moirai 等 foundation model，稳定增益后再入 ensemble。</p></div>
+        <div class="panel"><h2>发布形态</h2><p>当前产物已整理为脚本、输出数据、报告文档和 GitHub Pages 入口。</p></div>
       </div>
     </section>
   </main>

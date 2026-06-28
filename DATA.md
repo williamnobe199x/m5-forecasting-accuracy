@@ -1,6 +1,6 @@
-# Data And Large Artifacts
+﻿# Data And Large Artifacts
 
-[KNOWN, HIGH] GitHub has practical file-size limits and is not a good place to store the full M5 raw CSV files, pickle feature tables, or LightGBM binary models directly.
+GitHub has practical file-size limits and is not a good place to store the full M5 raw CSV files, pickle feature tables, or LightGBM binary models directly.
 
 Keep these files locally in the project root when you need to reproduce the full pipeline:
 
