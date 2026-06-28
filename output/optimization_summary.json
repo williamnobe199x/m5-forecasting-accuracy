@@ -1,0 +1,8 @@
+{
+  "best_candidate": "trend_global",
+  "base_avg_wrmsse": 0.4752413640998811,
+  "best_avg_wrmsse": 0.4713737407261391,
+  "improvement_abs": 0.003867623373742024,
+  "improvement_pct": 0.008138229678444337,
+  "selection_warning": "The best candidate is selected on the single local validation window. Treat it as a reproducible project optimization, not as a blind competition estimate."
+}

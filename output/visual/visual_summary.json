@@ -1,0 +1,12 @@
+{
+  "bottom_series": 30490,
+  "states": 3,
+  "stores": 10,
+  "categories": 3,
+  "departments": 7,
+  "items": 3049,
+  "days": 1941,
+  "validation_actual_sales": 1231764.0,
+  "feature_importance_images": 20,
+  "optimization_candidates": 20
+}

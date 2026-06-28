@@ -1,0 +1,27 @@
+# Python caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# OS and notebook sidecar files
+.DS_Store
+._*
+
+# M5 raw data and large generated feature/model artifacts
+sales_train_evaluation.csv
+sales_train_validation.csv
+calendar.csv
+sell_prices.csv
+sample_submission.csv
+grid_part_*.pkl
+archive/
+*.bin
+*.pkl
+
+# Large prediction/submission files
+output/archive_validation_predictions*.csv
+output/submission*.csv
+output/snaive_validation_predictions.csv
+
+# Temporary runtime checks
+output/dashboard_runtime.js

@@ -1,0 +1,154 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "M5: reproduce archived prediction",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "scripts/reproduce_archive_prediction.py",
+        "--archive-dir",
+        "archive",
+        "--sample-submission",
+        "sample_submission.csv",
+        "--predictions-out",
+        "output/archive_validation_predictions.csv",
+        "--submission-out",
+        "output/submission_v1_local.csv",
+        "--clip-zero"
+      ],
+      "options": {
+        "env": {
+          "PYTHONIOENCODING": "utf-8"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "M5: score archived prediction",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "scripts/score_m5_wrmsse.py",
+        "--predictions",
+        "output/archive_validation_predictions.csv",
+        "--details-out",
+        "output/wrmsse_by_level.csv"
+      ],
+      "options": {
+        "env": {
+          "PYTHONIOENCODING": "utf-8"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "M5: apply trend optimization",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "scripts/apply_trend_multiplier.py",
+        "--predictions",
+        "output/archive_validation_predictions.csv",
+        "--sales",
+        "sales_train_evaluation.csv",
+        "--out",
+        "output/archive_validation_predictions_trend_global.csv"
+      ],
+      "options": {
+        "env": {
+          "PYTHONIOENCODING": "utf-8"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "M5: score trend optimization",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "scripts/score_m5_wrmsse.py",
+        "--predictions",
+        "output/archive_validation_predictions_trend_global.csv",
+        "--details-out",
+        "output/wrmsse_trend_global_by_level.csv"
+      ],
+      "options": {
+        "env": {
+          "PYTHONIOENCODING": "utf-8"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "M5: build contribution summary",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "scripts/analyze_project_contribution.py"
+      ],
+      "options": {
+        "env": {
+          "PYTHONIOENCODING": "utf-8"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "M5: build HTML showcase",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "scripts/build_project_showcase.py"
+      ],
+      "options": {
+        "env": {
+          "PYTHONIOENCODING": "utf-8"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "M5: optimize forecast candidates",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "scripts/optimize_forecast_candidates.py"
+      ],
+      "options": {
+        "env": {
+          "PYTHONIOENCODING": "utf-8"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "M5: build visual assets",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "scripts/build_visual_assets.py"
+      ],
+      "options": {
+        "env": {
+          "PYTHONIOENCODING": "utf-8"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "M5: run full optimized pipeline",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "scripts/run_full_pipeline.py"
+      ],
+      "options": {
+        "env": {
+          "PYTHONIOENCODING": "utf-8"
+        }
+      },
+      "problemMatcher": []
+    }
+  ]
+}
