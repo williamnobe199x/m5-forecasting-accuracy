@@ -18,9 +18,12 @@
 - `scripts/analyze_project_contribution.py`: 项目贡献与误差诊断汇总。
 - `scripts/build_visual_assets.py`: EDA 和结果可视化小表生成。
 - `scripts/build_project_showcase.py`: 交互式 HTML 展示页生成。
+- `scripts/build_report_presentation.py`: 成果汇报网页与讲稿生成。
 - `scripts/run_full_pipeline.py`: 刷新优化、分析和展示页的一键脚本。
-- `docs/index.html`: GitHub Pages 入口。
-- `docs/m5_project_showcase.html`: 项目展示页。
+- `docs/index.html`: GitHub Pages 成果汇报入口。
+- `docs/report_presentation.html`: 与讲稿匹配的成果汇报网页。
+- `docs/presentation_script.md`: 成果汇报讲稿。
+- `docs/m5_project_showcase.html`: 交互式项目 dashboard。
 
 ## 复现
 

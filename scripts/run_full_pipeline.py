@@ -20,6 +20,7 @@ def main() -> None:
     run(["scripts/analyze_project_contribution.py"])
     run(["scripts/build_visual_assets.py"])
     run(["scripts/build_project_showcase.py"])
+    run(["scripts/build_report_presentation.py"])
 
 
 if __name__ == "__main__":

@@ -132,7 +132,7 @@ function renderFeatureGallery() {
   const el = byId("feature-gallery");
   if (el.dataset.rendered === "1") return;
   const rows = data.featureImages.slice(0, 12);
-  el.innerHTML = rows.map((img) => `<figure><img loading="lazy" src="../${img.file}" alt="${img.store_id} ${img.kind} feature importance"><figcaption>${img.store_id} · ${img.kind}</figcaption></figure>`).join("");
+  el.innerHTML = rows.map((img) => `<figure><img loading="lazy" src="assets/${img.file}" alt="${img.store_id} ${img.kind} feature importance"><figcaption>${img.store_id} · ${img.kind}</figcaption></figure>`).join("");
   el.dataset.rendered = "1";
 }
 

@@ -137,6 +137,20 @@
       "problemMatcher": []
     },
     {
+      "label": "M5: build report presentation",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "scripts/build_report_presentation.py"
+      ],
+      "options": {
+        "env": {
+          "PYTHONIOENCODING": "utf-8"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "M5: run full optimized pipeline",
       "type": "shell",
       "command": "python",

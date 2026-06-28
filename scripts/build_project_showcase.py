@@ -11,6 +11,9 @@ from pathlib import Path
 import pandas as pd
 
 
+ROOT = Path(__file__).resolve().parents[1]
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--summary", default="output/project_summary.json", type=Path)
@@ -20,7 +23,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--candidates", default="output/optimization_candidates.csv", type=Path)
     parser.add_argument("--visual-dir", default="output/visual", type=Path)
     parser.add_argument("--out", default="docs/m5_project_showcase.html", type=Path)
-    parser.add_argument("--index-out", default="docs/index.html", type=Path)
+    parser.add_argument("--index-out", default=None, type=Path)
     return parser.parse_args()
 
 
@@ -57,6 +60,18 @@ def load_dashboard_data(args: argparse.Namespace) -> dict:
         "featureImages": records(visual / "feature_importance_inventory.csv"),
     }
     return data
+
+
+def copy_dashboard_assets(data: dict, docs_dir: Path) -> None:
+    assets_dir = docs_dir / "assets"
+    assets_dir.mkdir(parents=True, exist_ok=True)
+    for image in data.get("featureImages", []):
+        filename = image.get("file")
+        if not filename:
+            continue
+        source = ROOT / filename
+        if source.exists():
+            shutil.copyfile(source, assets_dir / filename)
 
 
 def compact_num(value: float) -> str:
@@ -401,7 +416,7 @@ function renderFeatureGallery() {
   const el = byId("feature-gallery");
   if (el.dataset.rendered === "1") return;
   const rows = data.featureImages.slice(0, 12);
-  el.innerHTML = rows.map((img) => `<figure><img loading="lazy" src="../${img.file}" alt="${img.store_id} ${img.kind} feature importance"><figcaption>${img.store_id} · ${img.kind}</figcaption></figure>`).join("");
+  el.innerHTML = rows.map((img) => `<figure><img loading="lazy" src="assets/${img.file}" alt="${img.store_id} ${img.kind} feature importance"><figcaption>${img.store_id} · ${img.kind}</figcaption></figure>`).join("");
   el.dataset.rendered = "1";
 }
 
@@ -595,6 +610,7 @@ if (document.readyState === "loading") {
 </html>
 """
     out.parent.mkdir(parents=True, exist_ok=True)
+    copy_dashboard_assets(data, out.parent)
     js_out = out.with_name("dashboard.js")
     js_out.write_text(js, encoding="utf-8")
     out.write_text(body, encoding="utf-8")
@@ -610,8 +626,9 @@ def main() -> None:
     data = load_dashboard_data(args)
     write_html(data, args.out, args.index_out)
     print(f"wrote {args.out}")
-    print(f"wrote {args.index_out}")
     print(f"wrote {args.out.with_name('dashboard.js')}")
+    if args.index_out:
+        print(f"wrote {args.index_out}")
 
 
 if __name__ == "__main__":
