@@ -1,0 +1,6 @@
+area,artifact,result,job_value
+Rolling CV,rolling_cv_detail.csv / rolling_cv_summary.csv,"5 windows, best candidate seasonal_naive_28",支撑预测准确率监控、复盘和持续迭代
+Business WAPE and Bias,rolling_cv_business_groups.csv,state/store/category/store-category grains,贴近 SKU/区域/渠道粒度的预测考核
+Aggregate lag features,aggregate_feature_schema.csv / aggregate_feature_pilot_summary.csv,12 feature definitions,把低噪声聚合趋势纳入模型设计
+Direct horizon pilot,rolling_cv_horizon_segments.csv,"4 7-day segments, pilot Avg WRMSSE 0.827",验证 direct horizon 方向，但暂不替换当前最佳结果
+JD gap analysis,jd_capability_matrix.csv / jd_gap_list.csv,"4 covered, 2 partial, 6 missing",把成果汇报转成招聘方能理解的能力证据

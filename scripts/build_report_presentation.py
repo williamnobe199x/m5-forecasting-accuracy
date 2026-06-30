@@ -22,6 +22,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--candidates", default="output/optimization_candidates.csv", type=Path)
     parser.add_argument("--daily", default="output/daily_totals.csv", type=Path)
     parser.add_argument("--visual-dir", default="output/visual", type=Path)
+    parser.add_argument("--job-dir", default="output/job_alignment", type=Path)
+    parser.add_argument("--direct-score", default="output/direct_segment_lightgbm_wrmsse_by_level.csv", type=Path)
     parser.add_argument("--html-out", default="docs/report_presentation.html", type=Path)
     parser.add_argument("--script-out", default="docs/presentation_script.md", type=Path)
     parser.add_argument("--index-out", default="docs/index.html", type=Path)
@@ -34,6 +36,18 @@ def read_json(path: Path) -> dict:
 
 def read_csv(path: Path) -> pd.DataFrame:
     return pd.read_csv(path)
+
+
+def read_json_optional(path: Path) -> dict:
+    if not path.exists():
+        return {}
+    return read_json(path)
+
+
+def read_csv_optional(path: Path) -> pd.DataFrame:
+    if not path.exists():
+        return pd.DataFrame()
+    return read_csv(path)
 
 
 def pct(value: float) -> str:
@@ -176,10 +190,43 @@ optimization_candidates.csv -> candidate ranking chart
 forecast_store_bias.csv -> store-level bias chart
 feature importance PNGs -> model explanation gallery
 """,
+        "rolling_cv": """
+for origin in [1802, 1830, 1858, 1886, 1914]:
+    train_history = sales[:origin-1]
+    actual = sales[origin:origin+27]
+    candidates = seasonal_naive + trend + direct_segment
+    score = WAPE(actual, prediction), Bias(actual, prediction)
+summary = mean score across windows
+""",
+        "aggregate_features": """
+item_all_store_roll_28 = sum(sales by item_id over recent 28 days)
+dept_store_roll_28 = sum(sales by dept_id, store_id over recent 28 days)
+bottom_zero_rate_28 = count_zero_days / 28
+trend_28_vs_prior = recent_28_sum / prior_28_sum
+""",
+        "direct_segment": """
+targets = [F1-F7 sum, F8-F14 sum, F15-F21 sum, F22-F28 sum]
+train LightGBM models on historical origins
+predict segment totals at d_1914
+allocate each segment to daily forecasts using previous 28-day shape
+score with the same 12-level WRMSSE script
+""",
     }
 
 
-def build_sections(summary: dict, opt: dict, visual: dict) -> list[dict]:
+def build_sections(summary: dict, opt: dict, visual: dict, job: dict | None = None) -> list[dict]:
+    job = job or {}
+    job_summary = job.get("summary", {})
+    cv_best = job_summary.get("best_cv_candidate", "seasonal_naive_28")
+    cv_wape = float(job_summary.get("best_cv_mean_wape", 0))
+    cv_bias = float(job_summary.get("best_cv_mean_bias_pct", 0))
+    direct_wrmsse = job_summary.get("direct_segment_lightgbm_avg_wrmsse")
+    direct_wrmsse_text = "未运行" if direct_wrmsse is None else num(float(direct_wrmsse))
+    covered = int(job_summary.get("covered", 0))
+    partial = int(job_summary.get("partial", 0))
+    missing = int(job_summary.get("missing", 0))
+    themes = int(job_summary.get("capability_themes", covered + partial + missing))
+    feature_count = int(job_summary.get("aggregate_feature_count", 0))
     return [
         {
             "id": "opening",
@@ -375,32 +422,96 @@ def build_sections(summary: dict, opt: dict, visual: dict) -> list[dict]:
             "bullets": [
                 "完成复现脚本、评分脚本、优化扫描脚本、可视化资产脚本和汇报网页。",
                 "建立了 sNaive、LightGBM、Optimized 三层对比结果。",
-                "项目的价值在于把模型结果变成可审计的业务分析链路。",
+                "新增岗位对齐、rolling CV、聚合特征样例和 direct horizon 试验，使项目更接近真实预测岗位交付。",
             ],
             "speech": [
                 "我总结自己的边际贡献有三点。",
                 "第一，复现层面：把原始 notebook 和模型产物整理成脚本化流程，可以重复生成预测、评分和报告。",
                 "第二，分析层面：用 WRMSSE 做 12 层拆解，不只看一个平均分，还分析高层和底层的差异。",
-                "第三，展示层面：把参考、过程、代码、图表和结果组织成网页，方便做成果汇报，也方便后续迭代。",
+                "第三，岗位化层面：我把 JD 里常见的 rolling CV、WAPE、Bias、聚合特征、direct horizon、复盘和缺口清单补进项目，让它不只是竞赛复现，也更像真实业务里的预测分析交付。",
+            ],
+        },
+        {
+            "id": "jd_alignment",
+            "eyebrow": "13 / 岗位对齐",
+            "title": "把 9 张 JD 要求转成 HR 看得懂的能力证据",
+            "visual": "jd_matrix",
+            "bullets": [
+                f"9 张截图被整理为 {themes} 个能力主题：{covered} 个已覆盖、{partial} 个部分覆盖、{missing} 个未覆盖。",
+                "已覆盖的核心证据包括：Python/LightGBM、销售预测建模、12 层评价、rolling CV、可视化汇报。",
+                "未覆盖部分会单独形成 Word 清单，避免在汇报里把能力说满。",
+            ],
+            "speech": [
+                "为了让这个项目更贴近招聘场景，我把 9 张 JD 里反复出现的能力拆成 12 个主题。",
+                "这里我没有把所有要求都硬套到项目上。已经有证据的就标成已覆盖，比如预测建模、Python、LightGBM、分层评估和汇报展示。",
+                "只有一部分证据的，比如聚合特征和 direct horizon，我标成部分覆盖。完全没有做的，比如 SQL 数据仓库、补货库存优化、A/B Test、业务系统上线和 RAG 智能体，我会放进缺口清单。",
+            ],
+        },
+        {
+            "id": "rolling_cv",
+            "eyebrow": "14 / 稳定实验",
+            "title": "新增 rolling CV：优化必须跨多个历史窗口站得住",
+            "visual": "rolling_cv",
+            "code": "rolling_cv",
+            "bullets": [
+                f"新增 {job_summary.get('rolling_windows', 5)} 个 28 天滚动窗口，用 WAPE 和 Bias 做业务口径验证。",
+                f"纯历史基线下最稳候选为 `{cv_best}`，平均 WAPE 为 {pct(cv_wape)}，平均 Bias 为 {pct(cv_bias)}。",
+                "这个结果说明：单窗口有效的趋势后处理不能无条件外推，后续优化应优先进入训练特征和多窗口验证。",
+            ],
+            "speech": [
+                "这一页是我这轮最重要的补强。之前只有 d_1914 到 d_1941 一个验证窗口，容易把偶然有效的方法误认为稳定有效。",
+                "我新增了 5 个历史滚动窗口，每个窗口都只使用预测日前的历史数据，然后比较 seasonal naive、趋势校准、horizon 校准和 direct segment 校准。",
+                "结果很有提醒意义：在纯历史基线下，最稳的是 28 天 seasonal naive；更复杂的趋势后处理没有跨窗口稳定胜出。所以后续不能只继续调 multiplier，而要把多粒度特征接入模型训练，再用 rolling CV 重新判断。",
+            ],
+        },
+        {
+            "id": "aggregate_direct",
+            "eyebrow": "15 / 新实验",
+            "title": "补聚合特征，并验证 direct horizon 试点",
+            "visual": "aggregate_direct",
+            "code": "aggregate_features",
+            "bullets": [
+                f"新增 {feature_count} 个聚合 lag/rolling 特征定义，覆盖 item、dept-store、cat-store、store、state-category 等粒度。",
+                f"训练了 4 段 direct segment LightGBM 试点；本地 Avg WRMSSE 为 {direct_wrmsse_text}，未替换当前最优方案。",
+                "直接采用新模型不是目标；目标是把可解释实验、失败证据和下一步训练方向沉淀下来。",
+            ],
+            "speech": [
+                "第二个补强，是把多粒度特征先做成样例和 schema。比如同商品跨门店近 28 天销量、同部门同门店近 28 天销量、门店总趋势、底层零销量比例等。",
+                "这些特征的意义是降低底层 SKU 的随机噪声，让模型看到更稳定的群体趋势。它们已经生成了样例摘要，但还没有作为训练特征重新训练当前主模型，所以我把它标为部分覆盖。",
+                "第三个补强，是 direct horizon。我训练了 4 个 7 天段的 LightGBM 模型，再按上一周期日分布拆回 28 天。结果没有超过当前 LightGBM 主方案，所以暂不采用。这个结论本身有价值：它说明 direct 方向需要更强特征和更细调参，而不是简单换个训练目标就会更好。",
+            ],
+        },
+        {
+            "id": "jd_gaps",
+            "eyebrow": "16 / 缺口清单",
+            "title": "哪些 JD 要求还没满足：我把边界讲清楚",
+            "visual": "jd_gaps",
+            "bullets": [
+                "P0 缺口：聚合特征尚未接入主训练；direct horizon 还只是试点。",
+                "P1 缺口：SQL/数据治理、库存补货仿真、服务化部署和监控闭环还没有完成。",
+                "P2/P3 缺口：因果/A-B、运筹约束、RAG/智能体适合作为后续扩展，不应该在当前项目里夸大。",
+            ],
+            "speech": [
+                "最后这页是面向面试和复盘的诚实边界。",
+                "这个项目目前最强的是预测建模、评价体系、可解释优化和展示表达；但它还不是完整供应链计划系统。",
+                "所以 Word 文档里我会列清楚未满足要求：比如 SQL 数据仓库、库存补货策略、生产计划运筹、A/B Test、业务系统上线、SAP IBP 等平台经验，以及大模型 RAG 智能体。这些不是失败，而是下一阶段可以继续补的作品方向。",
             ],
         },
         {
             "id": "next",
-            "eyebrow": "13 / 下一步",
-            "title": "下一轮优化：先建 rolling CV，再做 direct 和聚合 lag",
+            "eyebrow": "17 / 下一步",
+            "title": "下一轮优化：把试点变成主模型能力",
             "visual": "next",
             "bullets": [
-                "P0: 建立 rolling CV，避免单窗口过拟合。",
-                "P1: 增加 item、item-store、dept-store 聚合 lag/rolling 特征。",
-                "P2: 增加 4 段 direct horizon LightGBM，与 recursive 输出做 ensemble。",
-                "P3: 再评估层级 reconciliation 和 foundation model 抽样实验。",
+                "P0: 把 item、dept-store、cat-store 聚合 lag/rolling 接进训练数据，并用 rolling CV 复验。",
+                "P1: 重做 direct horizon LightGBM，加入更强特征、早停和 ensemble，而不是采用当前试点。",
+                "P2: 补 DuckDB/SQL 口径层、库存补货仿真和红黄绿预警 Dashboard。",
+                "P3: 基础稳定后，再评估层级 reconciliation、Chronos/TimesFM/Moirai 或 RAG 复盘助手。",
             ],
             "speech": [
-                "最后讲下一步。我不会建议马上换一个最新大模型，因为当前证据显示，最缺的是稳定实验体系和多粒度特征。",
-                "第一步要做 rolling CV，这样所有优化都能跨多个窗口验证。",
-                "第二步补聚合 lag 和 rolling，让模型看到同商品跨门店、同部门同门店的低噪声趋势。",
-                "第三步做 direct horizon 模型，缓解递归预测的误差传播。",
-                "如果这些基础做好，再考虑层级 reconciliation 或 Chronos、TimesFM、Moirai 这类 foundation model 作为 ensemble 候选。",
+                "最后讲下一步。rolling CV 已经补上，聚合特征和 direct horizon 也已经有试点，但还没有成为主模型能力。",
+                "所以下一轮优先级很清楚：第一，把聚合特征真正接进训练；第二，用 rolling CV 重新训练和比较 direct horizon；第三，补 SQL、库存仿真、监控预警这些更贴近 JD 的业务层能力。",
+                "在这些基础做好后，再考虑层级 reconciliation 或 Chronos、TimesFM、Moirai 这类 foundation model 作为 ensemble 候选。这样技术升级会建立在稳定实验体系上。",
             ],
         },
     ]
@@ -447,6 +558,114 @@ def hierarchy_visual(visual: dict) -> str:
     return '<div class="metric-grid">' + "".join(
         f'<div><strong>{value}</strong><span>{label}</span></div>' for label, value in items
     ) + "</div>"
+
+
+def status_badge(status: str) -> str:
+    return f'<span class="status status-{html.escape(status.lower())}">{html.escape(status)}</span>'
+
+
+def dataframe_table(rows: pd.DataFrame, columns: list[tuple[str, str]], limit: int = 8) -> str:
+    if rows.empty:
+        return '<div class="empty-note">暂无数据，请先运行全流程脚本。</div>'
+    frame = rows.head(limit).copy()
+    head = "".join(f"<th>{html.escape(label)}</th>" for _, label in columns)
+    body_rows = []
+    for _, row in frame.iterrows():
+        cells = []
+        for col, _label in columns:
+            raw_value = row.get(col, "")
+            if pd.isna(raw_value):
+                value = ""
+            elif isinstance(raw_value, float):
+                value = pct(raw_value) if ("wape" in col or "bias" in col or col.endswith("_pct")) else num(raw_value)
+            else:
+                value = str(raw_value)
+            if col == "status":
+                cells.append(f"<td>{status_badge(value)}</td>")
+            else:
+                cells.append(f"<td>{html.escape(value)}</td>")
+        body_rows.append(f"<tr>{''.join(cells)}</tr>")
+    return f'<div class="table-wrap"><table><thead><tr>{head}</tr></thead><tbody>{"".join(body_rows)}</tbody></table></div>'
+
+
+def jd_alignment_visual(data: dict) -> str:
+    job_summary = data["job"].get("summary", {})
+    jd = data["job"].get("jd", pd.DataFrame())
+    items = [
+        ("能力主题", int_num(job_summary.get("capability_themes", len(jd)))),
+        ("已覆盖", int_num(job_summary.get("covered", 0))),
+        ("部分覆盖", int_num(job_summary.get("partial", 0))),
+        ("未覆盖", int_num(job_summary.get("missing", 0))),
+    ]
+    metrics = '<div class="metric-grid compact">' + "".join(
+        f'<div><strong>{value}</strong><span>{label}</span></div>' for label, value in items
+    ) + "</div>"
+    table = dataframe_table(
+        jd,
+        [
+            ("theme", "能力主题"),
+            ("status", "状态"),
+            ("hr_talking_point", "HR 关注点"),
+            ("next_action", "下一步"),
+        ],
+        7,
+    )
+    return metrics + table
+
+
+def rolling_cv_visual(data: dict, charts: dict, codes: dict) -> str:
+    summary = data["job"].get("cv_summary", pd.DataFrame())
+    detail = dataframe_table(
+        summary,
+        [
+            ("candidate", "候选"),
+            ("mean_wape", "Mean WAPE"),
+            ("mean_bias_pct", "Mean Bias"),
+            ("avg_rank", "Avg Rank"),
+            ("wins", "Wins"),
+        ],
+        6,
+    )
+    return charts.get("rolling_cv", "") + detail + code_block(codes["rolling_cv"])
+
+
+def aggregate_direct_visual(data: dict, codes: dict) -> str:
+    schema = data["job"].get("feature_schema", pd.DataFrame())
+    scorecard = data["job"].get("scorecard", pd.DataFrame())
+    schema_table = dataframe_table(
+        schema,
+        [
+            ("feature_name", "特征"),
+            ("source_grain", "粒度"),
+            ("window_days", "窗口"),
+            ("business_meaning", "业务含义"),
+        ],
+        7,
+    )
+    score_table = dataframe_table(
+        scorecard,
+        [
+            ("area", "模块"),
+            ("result", "结果"),
+            ("job_value", "岗位价值"),
+        ],
+        5,
+    )
+    return score_table + schema_table + code_block(codes["direct_segment"])
+
+
+def jd_gap_visual(data: dict) -> str:
+    gaps = data["job"].get("gaps", pd.DataFrame())
+    return dataframe_table(
+        gaps,
+        [
+            ("priority", "优先级"),
+            ("gap_area", "缺口"),
+            ("jd_requirement", "JD 要求"),
+            ("next_action", "补齐动作"),
+        ],
+        8,
+    )
 
 
 def visual_for(section: dict, data: dict, charts: dict, codes: dict) -> str:
@@ -496,6 +715,14 @@ def visual_for(section: dict, data: dict, charts: dict, codes: dict) -> str:
           <div><b>展示</b><span>网页 + 讲稿</span></div>
         </div>
         """
+    if name == "jd_matrix":
+        return jd_alignment_visual(data)
+    if name == "rolling_cv":
+        return rolling_cv_visual(data, charts, codes)
+    if name == "aggregate_direct":
+        return aggregate_direct_visual(data, codes)
+    if name == "jd_gaps":
+        return jd_gap_visual(data)
     if name == "next":
         return """
         <div class="roadmap">
@@ -553,6 +780,8 @@ pre{margin:16px 0 0;background:#0f172a;color:#e2e8f0;border-radius:8px;padding:1
 .image-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}figure{margin:0}figure img{width:100%;display:block;border:1px solid var(--line);border-radius:8px}figcaption{color:var(--muted);font-size:12px;margin-top:6px}
 .tile-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:16px}.tile-list span{background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:16px 10px;text-align:center;font-weight:800}
 .contribution,.roadmap{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.contribution b,.roadmap b{font-size:24px;color:var(--teal)}
+.metric-grid.compact{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:14px}.metric-grid.compact strong{font-size:26px}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:8px;margin-top:14px;background:#fff}table{width:100%;border-collapse:collapse;font-size:12px;line-height:1.45}th,td{padding:10px 12px;border-bottom:1px solid #e8edf3;text-align:left;vertical-align:top}th{background:#f8fafc;color:#334155;font-size:12px}tr:last-child td{border-bottom:0}.status{display:inline-block;border-radius:999px;padding:3px 8px;font-weight:800;font-size:11px}.status-covered{background:#e7f7ef;color:#166534}.status-partial{background:#fff7df;color:#8a5a00}.status-missing{background:#feecec;color:#9b1c1c}.empty-note{background:#f8fafc;border:1px dashed var(--line);border-radius:8px;padding:18px;color:var(--muted)}
 .footer{padding:28px 0;color:var(--muted);font-size:13px}.toplinks{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}.toplinks a{background:#fff;border:1px solid var(--line);border-radius:6px;text-decoration:none;padding:8px 10px}
 @media(max-width:980px){.layout{grid-template-columns:1fr}.side{position:static;height:auto}.section{grid-template-columns:1fr;min-height:auto}.flow,.ref-grid,.tile-list{grid-template-columns:1fr}.image-pair,.contribution,.roadmap,.metric-grid{grid-template-columns:1fr}}
 """
@@ -615,6 +844,15 @@ def main() -> None:
     daily = read_csv(args.daily)
     visual = read_json(args.visual_dir / "visual_summary.json")
     eda_daily = read_csv(args.visual_dir / "eda_daily_sales.csv")
+    job = {
+        "summary": read_json_optional(args.job_dir / "job_alignment_summary.json"),
+        "jd": read_csv_optional(args.job_dir / "jd_capability_matrix.csv"),
+        "gaps": read_csv_optional(args.job_dir / "jd_gap_list.csv"),
+        "cv_summary": read_csv_optional(args.job_dir / "rolling_cv_summary.csv"),
+        "feature_schema": read_csv_optional(args.job_dir / "aggregate_feature_schema.csv"),
+        "scorecard": read_csv_optional(args.job_dir / "forecast_governance_scorecard.csv"),
+        "direct_score": read_csv_optional(args.direct_score),
+    }
     codes = script_code()
 
     charts = {
@@ -622,9 +860,20 @@ def main() -> None:
         "eda": line_svg(eda_daily, [("sales", "Daily sales", "#4f46e5"), ("roll_28", "28-day rolling mean", "#167a78")], 260),
         "wrmsse": bars_svg(levels[levels["level"] != "Average"], "level", [("wrmsse_snaive", "sNaive", "#b7791f"), ("wrmsse_model", "LightGBM", "#2563eb"), ("wrmsse_optimized", "Optimized", "#2f855a")]),
         "candidates": single_bars(candidates.sort_values("avg_wrmsse"), "candidate", "avg_wrmsse", "#167a78", 8),
+        "rolling_cv": ""
+        if job["cv_summary"].empty
+        else single_bars(job["cv_summary"].sort_values("mean_wape"), "candidate", "mean_wape", "#167a78", 8),
     }
-    data = {"summary": summary, "opt": opt, "levels": levels, "candidates": candidates, "daily": daily, "visual": visual}
-    sections = build_sections(summary, opt, visual)
+    data = {
+        "summary": summary,
+        "opt": opt,
+        "levels": levels,
+        "candidates": candidates,
+        "daily": daily,
+        "visual": visual,
+        "job": job,
+    }
+    sections = build_sections(summary, opt, visual, job)
 
     args.html_out.parent.mkdir(parents=True, exist_ok=True)
     args.script_out.parent.mkdir(parents=True, exist_ok=True)

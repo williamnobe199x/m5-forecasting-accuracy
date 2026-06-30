@@ -1,0 +1,13 @@
+feature_name,source_grain,window_days,business_meaning,implementation_status
+bottom_roll_7_sum,item-store,7,底层 SKU-门店短期销售强度,computed_pilot
+bottom_roll_14_sum,item-store,14,底层 SKU-门店双周销售强度,computed_pilot
+bottom_roll_28_sum,item-store,28,底层 SKU-门店月度销售强度,computed_pilot
+bottom_zero_rate_28,item-store,28,间歇性需求和断货/低动销风险信号,computed_pilot
+bottom_trend_28_vs_prior,item-store,56,底层趋势变化,computed_pilot
+item_all_store_roll_28_sum,item_id,28,同商品跨门店近 28 天总销量,computed_pilot
+dept_store_roll_28_sum,dept_id+store_id,28,同部门同门店近 28 天总销量,computed_pilot
+cat_store_roll_28_sum,cat_id+store_id,28,同品类同门店近 28 天总销量,computed_pilot
+store_roll_28_sum,store_id,28,门店近 28 天总销量,computed_pilot
+state_cat_roll_28_sum,state_id+cat_id,28,州-品类近 28 天总销量,computed_pilot
+item_all_store_trend,item,56,同商品跨门店趋势变化，降低单门店噪声,computed_pilot
+dept_store_trend,dept-store,56,同部门同门店趋势变化，支撑门店补货和品类判断,computed_pilot

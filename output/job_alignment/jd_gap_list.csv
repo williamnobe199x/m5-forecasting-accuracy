@@ -1,0 +1,9 @@
+priority,gap_area,jd_requirement,current_project_boundary,next_action,hr_talking_point
+P0,Direct horizon 思路,降低递归预测误差传播，按未来周期输出可控预测,新增 4 段 direct segment trend 试点评估,训练 4 个 direct LightGBM horizon 模型并与 recursive ensemble,已经把 direct/recursive 的差异转成可落地实验
+P0,多粒度特征工程,节假日、促销、库存、市场波动与聚合趋势特征,已有日历/价格/lag/rolling；新增 item、dept-store、cat-store 聚合特征样例,把聚合特征接入训练数据并重新训练,能解释为什么聚合 lag 能降低底层噪声
+P1,SQL 与数据治理,复杂 SQL、窗口函数、数据质量治理、口径标准,当前使用 CSV 文件，没有 SQL 仓库和数据质量规则集,用 DuckDB 复刻核心宽表、聚合口径和质量校验,可补一层 DuckDB/SQL 指标口径来展示能力
+P1,业务落地和系统化,模型上线、内部服务、审批流程、异常预警、持续优化,当前是本地脚本和静态网页，没有 API/定时任务/服务化部署,封装 CLI/API，增加定时重跑和监控日志,项目展示了研发雏形，还需补工程化闭环
+P1,供应链补货与库存,安全库存、补货频次、库存周转、订单满足率联动,当前有需求预测和偏差诊断，但没有库存成本/服务水平优化模型,增加 safety stock 和 reorder point 仿真模块,可承认边界，并提出预测到补货的下一步
+P2,因果/A-B/What-if,因果推断、A/B Test、策略模拟、Bad Case 闭环,当前有候选对照和误差分析，但没有因果识别或真实实验设计,增加促销 uplift 的准实验设计或 what-if 仿真,可把预测偏差复盘扩展成实验和策略评估
+P2,运筹优化/生产计划,产能约束、交期约束、MOQ、生产批量、供应周期,当前只覆盖预测，不包含约束优化和生产计划,建立小型线性规划 demo：预测需求到补货/生产约束,适合定位为需求预测项目，而不是完整计划优化系统
+P3,大模型/智能体/RAG,Prompt、RAG、重排序、供应链智能体与大模型协同决策,当前未引入 LLM 决策助手或知识库检索流程,用项目文档构建一个预测复盘 RAG 助手,先把预测系统做稳，再把 LLM 放在解释和复盘层

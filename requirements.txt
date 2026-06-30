@@ -10,3 +10,4 @@ ipywidgets
 pyarrow
 xgboost
 openpyxl
+python-docx

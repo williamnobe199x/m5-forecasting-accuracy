@@ -19,6 +19,8 @@ pre{margin:16px 0 0;background:#0f172a;color:#e2e8f0;border-radius:8px;padding:1
 .image-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}figure{margin:0}figure img{width:100%;display:block;border:1px solid var(--line);border-radius:8px}figcaption{color:var(--muted);font-size:12px;margin-top:6px}
 .tile-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:16px}.tile-list span{background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:16px 10px;text-align:center;font-weight:800}
 .contribution,.roadmap{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.contribution b,.roadmap b{font-size:24px;color:var(--teal)}
+.metric-grid.compact{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:14px}.metric-grid.compact strong{font-size:26px}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:8px;margin-top:14px;background:#fff}table{width:100%;border-collapse:collapse;font-size:12px;line-height:1.45}th,td{padding:10px 12px;border-bottom:1px solid #e8edf3;text-align:left;vertical-align:top}th{background:#f8fafc;color:#334155;font-size:12px}tr:last-child td{border-bottom:0}.status{display:inline-block;border-radius:999px;padding:3px 8px;font-weight:800;font-size:11px}.status-covered{background:#e7f7ef;color:#166534}.status-partial{background:#fff7df;color:#8a5a00}.status-missing{background:#feecec;color:#9b1c1c}.empty-note{background:#f8fafc;border:1px dashed var(--line);border-radius:8px;padding:18px;color:var(--muted)}
 .footer{padding:28px 0;color:var(--muted);font-size:13px}.toplinks{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}.toplinks a{background:#fff;border:1px solid var(--line);border-radius:6px;text-decoration:none;padding:8px 10px}
 @media(max-width:980px){.layout{grid-template-columns:1fr}.side{position:static;height:auto}.section{grid-template-columns:1fr;min-height:auto}.flow,.ref-grid,.tile-list{grid-template-columns:1fr}.image-pair,.contribution,.roadmap,.metric-grid{grid-template-columns:1fr}}
 </style>
@@ -44,7 +46,11 @@ pre{margin:16px 0 0;background:#0f172a;color:#e2e8f0;border-radius:8px;padding:1
 <a href="#visualization">10. 我把值得展示的内容拆成五类图</a>
 <a href="#results">11. 结果不是“分数变好”这么简单：高层改善明显，底层仍是难点</a>
 <a href="#contribution">12. 我的边际贡献：把竞赛方案整理成可复现、可解释、可展示的项目</a>
-<a href="#next">13. 下一轮优化：先建 rolling CV，再做 direct 和聚合 lag</a></nav>
+<a href="#jd_alignment">13. 把 9 张 JD 要求转成 HR 看得懂的能力证据</a>
+<a href="#rolling_cv">14. 新增 rolling CV：优化必须跨多个历史窗口站得住</a>
+<a href="#aggregate_direct">15. 补聚合特征，并验证 direct horizon 试点</a>
+<a href="#jd_gaps">16. 哪些 JD 要求还没满足：我把边界讲清楚</a>
+<a href="#next">17. 下一轮优化：把试点变成主模型能力</a></nav>
     </aside>
     <main class="main">
       
@@ -195,8 +201,8 @@ feature importance PNGs -&gt; model explanation gallery</code></pre>
               <div class="text">
                 <div class="eyebrow">12 / 边际贡献</div>
                 <h2>我的边际贡献：把竞赛方案整理成可复现、可解释、可展示的项目</h2>
-                <div class="bullets"><div class="bullet">完成复现脚本、评分脚本、优化扫描脚本、可视化资产脚本和汇报网页。</div><div class="bullet">建立了 sNaive、LightGBM、Optimized 三层对比结果。</div><div class="bullet">项目的价值在于把模型结果变成可审计的业务分析链路。</div></div>
-                <div class="speaker"><b>讲稿</b><p>我总结自己的边际贡献有三点。</p><p>第一，复现层面：把原始 notebook 和模型产物整理成脚本化流程，可以重复生成预测、评分和报告。</p><p>第二，分析层面：用 WRMSSE 做 12 层拆解，不只看一个平均分，还分析高层和底层的差异。</p><p>第三，展示层面：把参考、过程、代码、图表和结果组织成网页，方便做成果汇报，也方便后续迭代。</p></div>
+                <div class="bullets"><div class="bullet">完成复现脚本、评分脚本、优化扫描脚本、可视化资产脚本和汇报网页。</div><div class="bullet">建立了 sNaive、LightGBM、Optimized 三层对比结果。</div><div class="bullet">新增岗位对齐、rolling CV、聚合特征样例和 direct horizon 试验，使项目更接近真实预测岗位交付。</div></div>
+                <div class="speaker"><b>讲稿</b><p>我总结自己的边际贡献有三点。</p><p>第一，复现层面：把原始 notebook 和模型产物整理成脚本化流程，可以重复生成预测、评分和报告。</p><p>第二，分析层面：用 WRMSSE 做 12 层拆解，不只看一个平均分，还分析高层和底层的差异。</p><p>第三，岗位化层面：我把 JD 里常见的 rolling CV、WAPE、Bias、聚合特征、direct horizon、复盘和缺口清单补进项目，让它不只是竞赛复现，也更像真实业务里的预测分析交付。</p></div>
               </div>
               <div class="visual">
         <div class="contribution">
@@ -208,12 +214,61 @@ feature importance PNGs -&gt; model explanation gallery</code></pre>
         </div>
             </section>
             
+            <section class="section" id="jd_alignment">
+              <div class="text">
+                <div class="eyebrow">13 / 岗位对齐</div>
+                <h2>把 9 张 JD 要求转成 HR 看得懂的能力证据</h2>
+                <div class="bullets"><div class="bullet">9 张截图被整理为 12 个能力主题：4 个已覆盖、2 个部分覆盖、6 个未覆盖。</div><div class="bullet">已覆盖的核心证据包括：Python/LightGBM、销售预测建模、12 层评价、rolling CV、可视化汇报。</div><div class="bullet">未覆盖部分会单独形成 Word 清单，避免在汇报里把能力说满。</div></div>
+                <div class="speaker"><b>讲稿</b><p>为了让这个项目更贴近招聘场景，我把 9 张 JD 里反复出现的能力拆成 12 个主题。</p><p>这里我没有把所有要求都硬套到项目上。已经有证据的就标成已覆盖，比如预测建模、Python、LightGBM、分层评估和汇报展示。</p><p>只有一部分证据的，比如聚合特征和 direct horizon，我标成部分覆盖。完全没有做的，比如 SQL 数据仓库、补货库存优化、A/B Test、业务系统上线和 RAG 智能体，我会放进缺口清单。</p></div>
+              </div>
+              <div class="visual"><div class="metric-grid compact"><div><strong>12</strong><span>能力主题</span></div><div><strong>4</strong><span>已覆盖</span></div><div><strong>2</strong><span>部分覆盖</span></div><div><strong>6</strong><span>未覆盖</span></div></div><div class="table-wrap"><table><thead><tr><th>能力主题</th><th>状态</th><th>HR 关注点</th><th>下一步</th></tr></thead><tbody><tr><td>销售预测建模</td><td><span class="status status-covered">Covered</span></td><td>能够把竞赛预测任务翻译成零售销售预测场景</td><td>增加周/月粒度聚合输出，贴近 DP 周期</td></tr><tr><td>稳定实验体系</td><td><span class="status status-covered">Covered</span></td><td>不是单窗口调参，而是跨窗口比较方案稳定性</td><td>把红黄绿预警接入交互 Dashboard</td></tr><tr><td>多粒度特征工程</td><td><span class="status status-partial">Partial</span></td><td>能解释为什么聚合 lag 能降低底层噪声</td><td>把聚合特征接入训练数据并重新训练</td></tr><tr><td>Direct horizon 思路</td><td><span class="status status-partial">Partial</span></td><td>已经把 direct/recursive 的差异转成可落地实验</td><td>训练 4 个 direct LightGBM horizon 模型并与 recursive ensemble</td></tr><tr><td>模型工具栈</td><td><span class="status status-covered">Covered</span></td><td>有端到端脚本和可审计输出，而不是只跑 notebook</td><td>补充 XGBoost/CatBoost 或 AutoML 对照实验</td></tr><tr><td>可视化与汇报</td><td><span class="status status-covered">Covered</span></td><td>能把模型结果讲给非算法听众</td><td>增加 HR 能力矩阵和业务 RCA 页面</td></tr><tr><td>供应链补货与库存</td><td><span class="status status-missing">Missing</span></td><td>可承认边界，并提出预测到补货的下一步</td><td>增加 safety stock 和 reorder point 仿真模块</td></tr></tbody></table></div></div>
+            </section>
+            
+            <section class="section" id="rolling_cv">
+              <div class="text">
+                <div class="eyebrow">14 / 稳定实验</div>
+                <h2>新增 rolling CV：优化必须跨多个历史窗口站得住</h2>
+                <div class="bullets"><div class="bullet">新增 5 个 28 天滚动窗口，用 WAPE 和 Bias 做业务口径验证。</div><div class="bullet">纯历史基线下最稳候选为 `seasonal_naive_28`，平均 WAPE 为 91.55%，平均 Bias 为 -3.88%。</div><div class="bullet">这个结果说明：单窗口有效的趋势后处理不能无条件外推，后续优化应优先进入训练特征和多窗口验证。</div></div>
+                <div class="speaker"><b>讲稿</b><p>这一页是我这轮最重要的补强。之前只有 d_1914 到 d_1941 一个验证窗口，容易把偶然有效的方法误认为稳定有效。</p><p>我新增了 5 个历史滚动窗口，每个窗口都只使用预测日前的历史数据，然后比较 seasonal naive、趋势校准、horizon 校准和 direct segment 校准。</p><p>结果很有提醒意义：在纯历史基线下，最稳的是 28 天 seasonal naive；更复杂的趋势后处理没有跨窗口稳定胜出。所以后续不能只继续调 multiplier，而要把多粒度特征接入模型训练，再用 rolling CV 重新判断。</p></div>
+              </div>
+              <div class="visual"><svg viewBox="0 0 880 292" role="img" aria-label="candidate bars"><text x="6" y="36" class="barlabel">seasonal_naive_28</text><rect x="230" y="24" width="559.8" height="15" rx="4" fill="#167a78"/><text x="797.8" y="37" class="axis">0.915</text><text x="6" y="68" class="barlabel">blend_base_global_25</text><rect x="230" y="56" width="562.2" height="15" rx="4" fill="#167a78"/><text x="800.2" y="69" class="axis">0.919</text><text x="6" y="100" class="barlabel">blend_base_global_50</text><rect x="230" y="88" width="564.6" height="15" rx="4" fill="#167a78"/><text x="802.6" y="101" class="axis">0.923</text><text x="6" y="132" class="barlabel">blend_base_global_75</text><rect x="230" y="120" width="567.0" height="15" rx="4" fill="#167a78"/><text x="805.0" y="133" class="axis">0.927</text><text x="6" y="164" class="barlabel">trend_global</text><rect x="230" y="152" width="569.4" height="15" rx="4" fill="#167a78"/><text x="807.4" y="165" class="axis">0.931</text><text x="6" y="196" class="barlabel">trend_category</text><rect x="230" y="184" width="569.5" height="15" rx="4" fill="#167a78"/><text x="807.5" y="197" class="axis">0.931</text><text x="6" y="228" class="barlabel">trend_state</text><rect x="230" y="216" width="570.0" height="15" rx="4" fill="#167a78"/><text x="808.0" y="229" class="axis">0.932</text><text x="6" y="260" class="barlabel">direct_segment_trend</text><rect x="230" y="248" width="570.0" height="15" rx="4" fill="#167a78"/><text x="808.0" y="261" class="axis">0.932</text></svg><div class="table-wrap"><table><thead><tr><th>候选</th><th>Mean WAPE</th><th>Mean Bias</th><th>Avg Rank</th><th>Wins</th></tr></thead><tbody><tr><td>seasonal_naive_28</td><td>91.55%</td><td>-3.88%</td><td>3.200</td><td>4</td></tr><tr><td>blend_base_global_25</td><td>91.94%</td><td>-3.18%</td><td>3.800</td><td>0</td></tr><tr><td>blend_base_global_50</td><td>92.33%</td><td>-2.48%</td><td>4.200</td><td>0</td></tr><tr><td>blend_base_global_75</td><td>92.73%</td><td>-1.78%</td><td>4.400</td><td>0</td></tr><tr><td>trend_global</td><td>93.13%</td><td>-1.08%</td><td>6.200</td><td>0</td></tr><tr><td>trend_category</td><td>93.15%</td><td>-1.01%</td><td>6.600</td><td>1</td></tr></tbody></table></div><pre><code>for origin in [1802, 1830, 1858, 1886, 1914]:
+    train_history = sales[:origin-1]
+    actual = sales[origin:origin+27]
+    candidates = seasonal_naive + trend + direct_segment
+    score = WAPE(actual, prediction), Bias(actual, prediction)
+summary = mean score across windows</code></pre></div>
+            </section>
+            
+            <section class="section" id="aggregate_direct">
+              <div class="text">
+                <div class="eyebrow">15 / 新实验</div>
+                <h2>补聚合特征，并验证 direct horizon 试点</h2>
+                <div class="bullets"><div class="bullet">新增 12 个聚合 lag/rolling 特征定义，覆盖 item、dept-store、cat-store、store、state-category 等粒度。</div><div class="bullet">训练了 4 段 direct segment LightGBM 试点；本地 Avg WRMSSE 为 0.827，未替换当前最优方案。</div><div class="bullet">直接采用新模型不是目标；目标是把可解释实验、失败证据和下一步训练方向沉淀下来。</div></div>
+                <div class="speaker"><b>讲稿</b><p>第二个补强，是把多粒度特征先做成样例和 schema。比如同商品跨门店近 28 天销量、同部门同门店近 28 天销量、门店总趋势、底层零销量比例等。</p><p>这些特征的意义是降低底层 SKU 的随机噪声，让模型看到更稳定的群体趋势。它们已经生成了样例摘要，但还没有作为训练特征重新训练当前主模型，所以我把它标为部分覆盖。</p><p>第三个补强，是 direct horizon。我训练了 4 个 7 天段的 LightGBM 模型，再按上一周期日分布拆回 28 天。结果没有超过当前 LightGBM 主方案，所以暂不采用。这个结论本身有价值：它说明 direct 方向需要更强特征和更细调参，而不是简单换个训练目标就会更好。</p></div>
+              </div>
+              <div class="visual"><div class="table-wrap"><table><thead><tr><th>模块</th><th>结果</th><th>岗位价值</th></tr></thead><tbody><tr><td>Rolling CV</td><td>5 windows, best candidate seasonal_naive_28</td><td>支撑预测准确率监控、复盘和持续迭代</td></tr><tr><td>Business WAPE and Bias</td><td>state/store/category/store-category grains</td><td>贴近 SKU/区域/渠道粒度的预测考核</td></tr><tr><td>Aggregate lag features</td><td>12 feature definitions</td><td>把低噪声聚合趋势纳入模型设计</td></tr><tr><td>Direct horizon pilot</td><td>4 7-day segments, pilot Avg WRMSSE 0.827</td><td>验证 direct horizon 方向，但暂不替换当前最佳结果</td></tr><tr><td>JD gap analysis</td><td>4 covered, 2 partial, 6 missing</td><td>把成果汇报转成招聘方能理解的能力证据</td></tr></tbody></table></div><div class="table-wrap"><table><thead><tr><th>特征</th><th>粒度</th><th>窗口</th><th>业务含义</th></tr></thead><tbody><tr><td>bottom_roll_7_sum</td><td>item-store</td><td>7</td><td>底层 SKU-门店短期销售强度</td></tr><tr><td>bottom_roll_14_sum</td><td>item-store</td><td>14</td><td>底层 SKU-门店双周销售强度</td></tr><tr><td>bottom_roll_28_sum</td><td>item-store</td><td>28</td><td>底层 SKU-门店月度销售强度</td></tr><tr><td>bottom_zero_rate_28</td><td>item-store</td><td>28</td><td>间歇性需求和断货/低动销风险信号</td></tr><tr><td>bottom_trend_28_vs_prior</td><td>item-store</td><td>56</td><td>底层趋势变化</td></tr><tr><td>item_all_store_roll_28_sum</td><td>item_id</td><td>28</td><td>同商品跨门店近 28 天总销量</td></tr><tr><td>dept_store_roll_28_sum</td><td>dept_id+store_id</td><td>28</td><td>同部门同门店近 28 天总销量</td></tr></tbody></table></div><pre><code>targets = [F1-F7 sum, F8-F14 sum, F15-F21 sum, F22-F28 sum]
+train LightGBM models on historical origins
+predict segment totals at d_1914
+allocate each segment to daily forecasts using previous 28-day shape
+score with the same 12-level WRMSSE script</code></pre></div>
+            </section>
+            
+            <section class="section" id="jd_gaps">
+              <div class="text">
+                <div class="eyebrow">16 / 缺口清单</div>
+                <h2>哪些 JD 要求还没满足：我把边界讲清楚</h2>
+                <div class="bullets"><div class="bullet">P0 缺口：聚合特征尚未接入主训练；direct horizon 还只是试点。</div><div class="bullet">P1 缺口：SQL/数据治理、库存补货仿真、服务化部署和监控闭环还没有完成。</div><div class="bullet">P2/P3 缺口：因果/A-B、运筹约束、RAG/智能体适合作为后续扩展，不应该在当前项目里夸大。</div></div>
+                <div class="speaker"><b>讲稿</b><p>最后这页是面向面试和复盘的诚实边界。</p><p>这个项目目前最强的是预测建模、评价体系、可解释优化和展示表达；但它还不是完整供应链计划系统。</p><p>所以 Word 文档里我会列清楚未满足要求：比如 SQL 数据仓库、库存补货策略、生产计划运筹、A/B Test、业务系统上线、SAP IBP 等平台经验，以及大模型 RAG 智能体。这些不是失败，而是下一阶段可以继续补的作品方向。</p></div>
+              </div>
+              <div class="visual"><div class="table-wrap"><table><thead><tr><th>优先级</th><th>缺口</th><th>JD 要求</th><th>补齐动作</th></tr></thead><tbody><tr><td>P0</td><td>Direct horizon 思路</td><td>降低递归预测误差传播，按未来周期输出可控预测</td><td>训练 4 个 direct LightGBM horizon 模型并与 recursive ensemble</td></tr><tr><td>P0</td><td>多粒度特征工程</td><td>节假日、促销、库存、市场波动与聚合趋势特征</td><td>把聚合特征接入训练数据并重新训练</td></tr><tr><td>P1</td><td>SQL 与数据治理</td><td>复杂 SQL、窗口函数、数据质量治理、口径标准</td><td>用 DuckDB 复刻核心宽表、聚合口径和质量校验</td></tr><tr><td>P1</td><td>业务落地和系统化</td><td>模型上线、内部服务、审批流程、异常预警、持续优化</td><td>封装 CLI/API，增加定时重跑和监控日志</td></tr><tr><td>P1</td><td>供应链补货与库存</td><td>安全库存、补货频次、库存周转、订单满足率联动</td><td>增加 safety stock 和 reorder point 仿真模块</td></tr><tr><td>P2</td><td>因果/A-B/What-if</td><td>因果推断、A/B Test、策略模拟、Bad Case 闭环</td><td>增加促销 uplift 的准实验设计或 what-if 仿真</td></tr><tr><td>P2</td><td>运筹优化/生产计划</td><td>产能约束、交期约束、MOQ、生产批量、供应周期</td><td>建立小型线性规划 demo：预测需求到补货/生产约束</td></tr><tr><td>P3</td><td>大模型/智能体/RAG</td><td>Prompt、RAG、重排序、供应链智能体与大模型协同决策</td><td>用项目文档构建一个预测复盘 RAG 助手</td></tr></tbody></table></div></div>
+            </section>
+            
             <section class="section" id="next">
               <div class="text">
-                <div class="eyebrow">13 / 下一步</div>
-                <h2>下一轮优化：先建 rolling CV，再做 direct 和聚合 lag</h2>
-                <div class="bullets"><div class="bullet">P0: 建立 rolling CV，避免单窗口过拟合。</div><div class="bullet">P1: 增加 item、item-store、dept-store 聚合 lag/rolling 特征。</div><div class="bullet">P2: 增加 4 段 direct horizon LightGBM，与 recursive 输出做 ensemble。</div><div class="bullet">P3: 再评估层级 reconciliation 和 foundation model 抽样实验。</div></div>
-                <div class="speaker"><b>讲稿</b><p>最后讲下一步。我不会建议马上换一个最新大模型，因为当前证据显示，最缺的是稳定实验体系和多粒度特征。</p><p>第一步要做 rolling CV，这样所有优化都能跨多个窗口验证。</p><p>第二步补聚合 lag 和 rolling，让模型看到同商品跨门店、同部门同门店的低噪声趋势。</p><p>第三步做 direct horizon 模型，缓解递归预测的误差传播。</p><p>如果这些基础做好，再考虑层级 reconciliation 或 Chronos、TimesFM、Moirai 这类 foundation model 作为 ensemble 候选。</p></div>
+                <div class="eyebrow">17 / 下一步</div>
+                <h2>下一轮优化：把试点变成主模型能力</h2>
+                <div class="bullets"><div class="bullet">P0: 把 item、dept-store、cat-store 聚合 lag/rolling 接进训练数据，并用 rolling CV 复验。</div><div class="bullet">P1: 重做 direct horizon LightGBM，加入更强特征、早停和 ensemble，而不是采用当前试点。</div><div class="bullet">P2: 补 DuckDB/SQL 口径层、库存补货仿真和红黄绿预警 Dashboard。</div><div class="bullet">P3: 基础稳定后，再评估层级 reconciliation、Chronos/TimesFM/Moirai 或 RAG 复盘助手。</div></div>
+                <div class="speaker"><b>讲稿</b><p>最后讲下一步。rolling CV 已经补上，聚合特征和 direct horizon 也已经有试点，但还没有成为主模型能力。</p><p>所以下一轮优先级很清楚：第一，把聚合特征真正接进训练；第二，用 rolling CV 重新训练和比较 direct horizon；第三，补 SQL、库存仿真、监控预警这些更贴近 JD 的业务层能力。</p><p>在这些基础做好后，再考虑层级 reconciliation 或 Chronos、TimesFM、Moirai 这类 foundation model 作为 ensemble 候选。这样技术升级会建立在稳定实验体系上。</p></div>
               </div>
               <div class="visual">
         <div class="roadmap">

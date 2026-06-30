@@ -1,0 +1,32 @@
+{
+  "train_origins": [
+    1410,
+    1438,
+    1466,
+    1494,
+    1522,
+    1550,
+    1578,
+    1606,
+    1634,
+    1662,
+    1690,
+    1718,
+    1746,
+    1774,
+    1802,
+    1830,
+    1858,
+    1886
+  ],
+  "train_rows": 548820,
+  "features": 28,
+  "targets": [
+    "seg_1",
+    "seg_2",
+    "seg_3",
+    "seg_4"
+  ],
+  "prediction_file": "output\\direct_segment_lightgbm_predictions.csv",
+  "feature_importance_file": "output\\direct_segment_lightgbm_feature_importance.csv"
+}

@@ -1,0 +1,15 @@
+{
+  "jd_screenshots": 9,
+  "capability_themes": 12,
+  "covered": 4,
+  "partial": 2,
+  "missing": 6,
+  "rolling_windows": 5,
+  "best_cv_candidate": "seasonal_naive_28",
+  "best_cv_mean_wape": 0.9154932484049023,
+  "base_cv_mean_wape": 0.9154932484049023,
+  "best_cv_mean_bias_pct": -0.03882134905906099,
+  "aggregate_feature_count": 12,
+  "direct_horizon_segments": 4,
+  "direct_segment_lightgbm_avg_wrmsse": 0.8271895503273218
+}

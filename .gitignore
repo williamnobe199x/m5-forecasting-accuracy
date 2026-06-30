@@ -20,6 +20,7 @@ archive/
 
 # Large prediction/submission files
 output/archive_validation_predictions*.csv
+output/direct_segment_lightgbm_predictions.csv
 output/submission*.csv
 output/snaive_validation_predictions.csv
 
